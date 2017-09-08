@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="bzh.buno.lependu.ui.activity.impl.MainActivity">
+
+    <ImageView
+        android:id="@+id/about"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/info_black"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
+        android:id="@+id/hangman"
+        android:layout_width="@dimen/hangman_width"
+        android:layout_height="@dimen/hangman_height"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="0dp"
+        android:src="@drawable/img7"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/wrong_letters"
+        style="@style/WhiteText"
+        android:layout_width="@dimen/hangman_width"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center_horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/keyboard_top"
+        app:layout_constraintLeft_toLeftOf="@+id/user_input"
+        app:layout_constraintRight_toRightOf="@+id/user_input"
+        app:layout_constraintTop_toBottomOf="@+id/user_input"
+        app:layout_constraintVertical_bias="0.191"
+        tools:text="azerty"/>
+
+    <ImageView
+        android:id="@+id/help"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/help_black"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/user_input"
+        app:layout_constraintHorizontal_bias="0.562"
+        app:layout_constraintLeft_toRightOf="@+id/user_input"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/user_input"
+        tools:visibility="visible"/>
+
+    <TextView
+        android:id="@+id/user_input"
+        style="@style/WhiteText"
+        android:layout_width="317dp"
+        android:layout_height="24dp"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/keyboard_top"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toRightOf="@+id/hangman"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.487"
+        tools:layout_editor_absoluteY="80dp"
+        tools:text="user input"/>
+
+    <com.linearlistview.LinearListView
+        android:id="@+id/keyboard_middle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="7dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/keyboard_bottom"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_height="50dp"/>
+
+    <com.linearlistview.LinearListView
+        android:id="@+id/keyboard_bottom"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_height="50dp"/>
+
+    <com.linearlistview.LinearListView
+        android:id="@+id/keyboard_top"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/keyboard_middle"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_height="50dp"/>
+
+</android.support.constraint.ConstraintLayout>

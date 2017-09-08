@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">LePendu</string>
+    <string name="game_over_title">Perdu :(</string>
+    <string name="game_over_message">Le mot à trouver était "%1$s".\nUne nouvelle partie?</string>
+    <string name="win_title">Gagné!!</string>
+    <string name="win_message_no_error">Tu as trouvé le mot sans erreur!\nUne nouvelle partie?</string>
+    <plurals name="win_message">
+        <item quantity="one">Tu as trouvé le mot avec une seule erreur!\nUne nouvelle partie?</item>
+        <item quantity="other">Tu as trouvé le mot avec seulement %d erreur!\nUne nouvelle partie?</item>
+    </plurals>
+</resources>

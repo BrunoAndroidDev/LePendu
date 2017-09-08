@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="keyboard_item_size">34dp</dimen>
+    <dimen name="hangman_width">200dp</dimen>
+    <dimen name="hangman_height">270dp</dimen>
+</resources>
