@@ -7,6 +7,7 @@ import bzh.buno.lependu.R
 import bzh.buno.lependu.adapter.KeyboardAdapter
 import bzh.buno.lependu.data.Keyboard
 import bzh.buno.lependu.data.Word
+import bzh.buno.lependu.ui.activity.AbsActivity
 import com.github.salomonbrys.kotson.fromJson
 import com.google.gson.Gson
 import com.linearlistview.LinearListView
@@ -21,7 +22,18 @@ Icone about, Help: Jack Cai, http://findicons.com/icon/175921/info_black (Licenc
 */
 class MainActivity : AbsActivity() {
 
-    val HANGMAN_DRAWABLE = arrayOf(
+    companion object {
+        private val KEY_USER_INPUT = "key_user_input"
+        private val KEY_CURRENT_WORD = "key_current_word"
+        private val KEY_USED_LETTERS  ="key_used_letters"
+        private val KEY_CURRENT_CLUE = "key_current_clue"
+        private val KEY_NB_ERRORS = "key_nb_errors"
+
+        private var MAX_TRY = 10
+        private var CLUE_INDEX = 5
+    }
+
+    private val HANGMAN_DRAWABLE = arrayOf(
             R.drawable.img0,
             R.drawable.img1,
             R.drawable.img2,
@@ -34,8 +46,6 @@ class MainActivity : AbsActivity() {
             R.drawable.img9,
             R.drawable.img10
     )
-    private var MAX_TRY = 10
-    private var CLUE_INDEX = 5
 
     private var items: List<Word>? = null
     private var usedLetters = String()
@@ -48,7 +58,28 @@ class MainActivity : AbsActivity() {
         setContentView(R.layout.activity_main)
 
         setupUI()
-        refreshUI()
+        if (savedInstanceState != null) {
+            currentWord = savedInstanceState.getString(KEY_CURRENT_WORD)
+            currentClue = savedInstanceState.getString(KEY_CURRENT_CLUE)
+            usedLetters = savedInstanceState.getString(KEY_USED_LETTERS)
+            nbError = savedInstanceState.getInt(KEY_NB_ERRORS)
+
+            user_input.text = savedInstanceState.getString(KEY_USER_INPUT)
+            wrong_letters.text = usedLetters
+            hangman.setImageResource(HANGMAN_DRAWABLE[nbError])
+            showClueIfNeeded()
+        } else {
+            refreshUI()
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(KEY_USER_INPUT, user_input.text.toString())
+        outState.putString(KEY_CURRENT_WORD, currentWord)
+        outState.putString(KEY_USED_LETTERS, usedLetters)
+        outState.putString(KEY_CURRENT_CLUE, currentClue)
+        outState.putInt(KEY_NB_ERRORS, nbError)
     }
 
     /**
@@ -61,7 +92,7 @@ class MainActivity : AbsActivity() {
         val inputStream = resources.openRawResource(R.raw.dico)
         val inputAsString = inputStream.bufferedReader().use { it.readText() }
         val gson = Gson()
-        items = gson.fromJson<List<Word>>(inputAsString)
+        items = gson.fromJson(inputAsString)
 
         //setup UI
         keyboard_top.adapter = KeyboardAdapter(this, Keyboard.TOP_LINE_DRAWABLE.asList())
@@ -79,7 +110,7 @@ class MainActivity : AbsActivity() {
 
     /**
      * Refresh UI
-     * Used to reset all data displaued in screen
+     * Used to reset all data displayed in screen
      */
     private fun refreshUI() {
         // reset word to find
@@ -108,16 +139,16 @@ class MainActivity : AbsActivity() {
         // check if letter hasn't already been used
         if (usedLetters.indexOf(c) == -1) {
             usedLetters += c
-            var found: Boolean = false
+            var found = false
 
             // does "word to find" contains the given letter?
-            for (i in 0..currentWord.length - 1) {
+            for (i in 0 until currentWord.length) {
                 if (c.equals(currentWord[i], true)) {
                     val text = user_input.text
                     val builder = StringBuilder()
-                    builder.append(text.slice(0..i - 1))
+                    builder.append(text.slice(0 until i))
                     builder.append(c)
-                    builder.append(text.slice(i + 1..text.length - 1))
+                    builder.append(text.slice(i + 1 until text.length))
                     user_input.text = builder.toString()
                     found = true
                 }
@@ -140,22 +171,27 @@ class MainActivity : AbsActivity() {
             } else {
                 // one more try?
                 nbError++
-                hangman.setImageResource(HANGMAN_DRAWABLE[nbError])
                 wrong_letters.append(c.toString())
+                hangman.setImageResource(HANGMAN_DRAWABLE[nbError])
                 if (nbError == MAX_TRY) {
                     alert(title = getString(R.string.game_over_title), message = getString(R.string.game_over_message, currentWord)) {
                         positiveButton(android.R.string.yes) { refreshUI() }
                         negativeButton(android.R.string.no) { finish() }
+                        isCancelable=false
                     }.show()
                 } else {
                     // need clue?
-                    if (nbError >= CLUE_INDEX) {
-                        help.visibility = View.VISIBLE
-                    } else {
-                        help.visibility = View.INVISIBLE
-                    }
+                    showClueIfNeeded()
                 }
             }
+        }
+    }
+
+    private fun showClueIfNeeded() {
+        if (nbError >= CLUE_INDEX) {
+            help.visibility = View.VISIBLE
+        } else {
+            help.visibility = View.INVISIBLE
         }
     }
 }
