@@ -25,9 +25,11 @@ class MainActivity : AbsActivity() {
     companion object {
         private val KEY_USER_INPUT = "key_user_input"
         private val KEY_CURRENT_WORD = "key_current_word"
-        private val KEY_USED_LETTERS  ="key_used_letters"
+        private val KEY_USED_LETTERS = "key_used_letters"
         private val KEY_CURRENT_CLUE = "key_current_clue"
         private val KEY_NB_ERRORS = "key_nb_errors"
+        private val KEY_ALERT_TITLE = "key_alert_title"
+        private val KEY_ALERT_MESSAGE = "key_alert_message"
 
         private var MAX_TRY = 10
         private var CLUE_INDEX = 5
@@ -52,6 +54,8 @@ class MainActivity : AbsActivity() {
     private var currentWord = ""
     private var currentClue = ""
     private var nbError = 0
+    private var alertTitle = ""
+    private var alertMessage = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,6 +72,11 @@ class MainActivity : AbsActivity() {
             wrong_letters.text = usedLetters
             hangman.setImageResource(HANGMAN_DRAWABLE[nbError])
             showClueIfNeeded()
+            alertTitle = savedInstanceState.getString(KEY_ALERT_TITLE)
+            alertMessage = savedInstanceState.getString(KEY_ALERT_MESSAGE)
+            if (alertTitle.isNotEmpty() && alertMessage.isNotEmpty()) {
+                displayAlert(alertTitle, alertMessage)
+            }
         } else {
             refreshUI()
         }
@@ -80,6 +89,8 @@ class MainActivity : AbsActivity() {
         outState.putString(KEY_USED_LETTERS, usedLetters)
         outState.putString(KEY_CURRENT_CLUE, currentClue)
         outState.putInt(KEY_NB_ERRORS, nbError)
+        outState.putString(KEY_ALERT_TITLE, alertTitle)
+        outState.putString(KEY_ALERT_MESSAGE, alertMessage)
     }
 
     /**
@@ -123,6 +134,9 @@ class MainActivity : AbsActivity() {
         usedLetters = ""
         nbError = 0
 
+        alertTitle = ""
+        alertMessage = ""
+
         // clean screen
         user_input.text = ""
         repeat(currentWord.length) { user_input.append("-") }
@@ -157,16 +171,12 @@ class MainActivity : AbsActivity() {
             // end of the game?
             if (found) {
                 if (currentWord.compareTo(user_input.text.toString()) == 0) {
-                    val message: String
-                    if (nbError == 0) {
-                        message = getString(R.string.win_message_no_error)
+                    val message: String = if (nbError == 0) {
+                        getString(R.string.win_message_no_error)
                     } else {
-                        message = resources.getQuantityString(R.plurals.win_message, nbError, nbError)
+                        resources.getQuantityString(R.plurals.win_message, nbError, nbError)
                     }
-                    alert(title = getString(R.string.win_title), message = message) {
-                        positiveButton(android.R.string.yes) { refreshUI() }
-                        negativeButton(android.R.string.no) { finish() }
-                    }.show()
+                    displayAlert(getString(R.string.win_title), message)
                 }
             } else {
                 // one more try?
@@ -174,17 +184,23 @@ class MainActivity : AbsActivity() {
                 wrong_letters.append(c.toString())
                 hangman.setImageResource(HANGMAN_DRAWABLE[nbError])
                 if (nbError == MAX_TRY) {
-                    alert(title = getString(R.string.game_over_title), message = getString(R.string.game_over_message, currentWord)) {
-                        positiveButton(android.R.string.yes) { refreshUI() }
-                        negativeButton(android.R.string.no) { finish() }
-                        isCancelable=false
-                    }.show()
+                    displayAlert(getString(R.string.game_over_title), getString(R.string.game_over_message, currentWord))
                 } else {
                     // need clue?
                     showClueIfNeeded()
                 }
             }
         }
+    }
+
+    private fun displayAlert(title: String, message: String) {
+        alertTitle = title
+        alertMessage = message
+        alert(title = title, message = message) {
+            positiveButton(android.R.string.yes) { refreshUI() }
+            negativeButton(android.R.string.no) { finish() }
+            isCancelable = false
+        }.show()
     }
 
     private fun showClueIfNeeded() {
