@@ -63,17 +63,17 @@ class MainActivity : AbsActivity() {
 
         setupUI()
         if (savedInstanceState != null) {
-            currentWord = savedInstanceState.getString(KEY_CURRENT_WORD)
-            currentClue = savedInstanceState.getString(KEY_CURRENT_CLUE)
-            usedLetters = savedInstanceState.getString(KEY_USED_LETTERS)
+            currentWord = savedInstanceState.getString(KEY_CURRENT_WORD)!!
+            currentClue = savedInstanceState.getString(KEY_CURRENT_CLUE)!!
+            usedLetters = savedInstanceState.getString(KEY_USED_LETTERS)!!
             nbError = savedInstanceState.getInt(KEY_NB_ERRORS)
 
             user_input.text = savedInstanceState.getString(KEY_USER_INPUT)
             wrong_letters.text = usedLetters
             hangman.setImageResource(HANGMAN_DRAWABLE[nbError])
             showClueIfNeeded()
-            alertTitle = savedInstanceState.getString(KEY_ALERT_TITLE)
-            alertMessage = savedInstanceState.getString(KEY_ALERT_MESSAGE)
+            alertTitle = savedInstanceState.getString(KEY_ALERT_TITLE)!!
+            alertMessage = savedInstanceState.getString(KEY_ALERT_MESSAGE)!!
             if (alertTitle.isNotEmpty() && alertMessage.isNotEmpty()) {
                 displayAlert(alertTitle, alertMessage)
             }

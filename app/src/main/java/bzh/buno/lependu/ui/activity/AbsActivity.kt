@@ -3,7 +3,7 @@ package bzh.buno.lependu.ui.activity
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.PersistableBundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 
 /**
  * Definition of the AbsActivity object.
